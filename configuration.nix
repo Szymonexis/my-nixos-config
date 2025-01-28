@@ -162,6 +162,9 @@ in {
     open = true;
   };
 
+  # Install steam
+  programs.steam.enable = true;
+
   # Install firefox.
   programs.firefox.enable = true;
 

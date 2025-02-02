@@ -9,10 +9,11 @@ let
     pname = "stripe-cli";
     version = "1.23.9";
     src = pkgs.fetchurl {
-      url = "https://github.com/stripe/stripe-cli/releases/download/v1.23.9/stripe_1.23.9_linux_x86_64.tar.gz";
+      url =
+        "https://github.com/stripe/stripe-cli/releases/download/v1.23.9/stripe_1.23.9_linux_x86_64.tar.gz";
       sha256 = "1rvvvfam1a781vy3wgqrrf83i8jvw4xwia3415ly2xgybzdppkzn";
     };
-    
+
     # Force creation of a directory structure
     unpackPhase = ''
       mkdir stripe-cli
@@ -26,10 +27,9 @@ let
     '';
   };
 in {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  imports = [ # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -44,6 +44,11 @@ in {
 
   # Enable networking
   networking.networkmanager.enable = true;
+
+  networking.interfaces = {
+    wlp15s0 = { wakeOnLan.enable = true; };
+    enp14s0 = { wakeOnLan.enable = true; };
+  };
 
   # Set your time zone.
   time.timeZone = "Europe/Warsaw";
@@ -70,6 +75,9 @@ in {
   # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
+
+  # Enable openrgb
+  services.hardware.openrgb.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -110,10 +118,11 @@ in {
     isNormalUser = true;
     description = "Szymon Kaszuba-Galka";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
-    packages = with pkgs; [
-      kdePackages.kate
-    #  thunderbird
-    ];
+    packages = with pkgs;
+      [
+        kdePackages.kate
+        #  thunderbird
+      ];
   };
 
   # Enable Docker
@@ -126,47 +135,44 @@ in {
   # Enable zsh and set it as the default shell
   users.defaultUserShell = pkgs.zsh;
 
-  programs.zsh = {
-    enable = true;
-    autosuggestions.enable = true;
-    syntaxHighlighting.enable = true;
-    ohMyZsh = {
+  programs = {
+    steam.enable = true;
+    firefox.enable = true;
+    zsh = {
       enable = true;
-      plugins = [ 
-        "git" 
-        "history"
-      ];
-      theme = "robbyrussell";
+      autosuggestions.enable = true;
+      syntaxHighlighting.enable = true;
+      ohMyZsh = {
+        enable = true;
+        plugins = [ "git" "history" ];
+        theme = "robbyrussell";
+      };
     };
-  };
-  
-  # enable nvidia card graphics
-  hardware.graphics = {
-    enable = true;
+    nix-ld = {
+      enable = true;
+      libraries = with pkgs; [ glibc libcxx ];
+    };
   };
 
   # ensure xorg uses the nvidia driver
   services.xserver.videoDrivers = [ "nvidia" ];
 
-  hardware.nvidia = {
-    # enable modesetting for Wayland comaptibility
-    modesetting.enable = true;
-    
-    # use stable nvidia driver package
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
-    powerManagement.enable = false;
-    powerManagement.finegrained = false;
-    
-    # enable nvidia settings gui
-    nvidiaSettings = true;
-    open = true;
+  hardware = {
+    graphics.enable = true;
+    nvidia = {
+      # enable modesetting for Wayland comaptibility
+      modesetting.enable = true;
+
+      # use stable nvidia driver package
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+      powerManagement.enable = false;
+      powerManagement.finegrained = false;
+
+      # enable nvidia settings gui
+      nvidiaSettings = true;
+      open = true;
+    };
   };
-
-  # Install steam
-  programs.steam.enable = true;
-
-  # Install firefox.
-  programs.firefox.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -180,9 +186,16 @@ in {
     zsh
     gh
     git
-    btop
     stripe-cli
+    btop
+    nvtopPackages.full # previously nvtop
+    radeontop
     neofetch
+    openrgb-with-all-plugins
+    prisma-engines
+    openssl
+    nixfmt-classic
+    direnv
     # bluetooth
     bluez
     bluez-tools
@@ -191,13 +204,24 @@ in {
     nodejs_22
     go
     python3
+    obsidian
     # media
     google-chrome
     spotify
-    obsidian
     discord-ptb
     slack
+    xournalpp
   ];
+
+  # Add Prisma environment variables
+  environment.sessionVariables = {
+    PRISMA_QUERY_ENGINE_LIBRARY =
+      "${pkgs.prisma-engines}/lib/libquery_engine.node";
+    PRISMA_SCHEMA_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/schema-engine";
+    PRISMA_INTROSPECTION_ENGINE_BINARY =
+      "${pkgs.prisma-engines}/bin/introspection-engine";
+    PRISMA_FMT_BINARY = "${pkgs.prisma-engines}/bin/prisma-fmt";
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

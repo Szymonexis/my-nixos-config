@@ -9,8 +9,7 @@ let
     pname = "stripe-cli";
     version = "1.23.9";
     src = pkgs.fetchurl {
-      url =
-        "https://github.com/stripe/stripe-cli/releases/download/v1.23.9/stripe_1.23.9_linux_x86_64.tar.gz";
+      url = "https://github.com/stripe/stripe-cli/releases/download/v1.23.9/stripe_1.23.9_linux_x86_64.tar.gz";
       sha256 = "1rvvvfam1a781vy3wgqrrf83i8jvw4xwia3415ly2xgybzdppkzn";
     };
 
@@ -26,8 +25,10 @@ let
       install -Dm755 stripe $out/bin/stripe
     '';
   };
-in {
-  imports = [ # Include the results of the hardware scan.
+in
+{
+  imports = [
+    # Include the results of the hardware scan.
     ./hardware-configuration.nix
   ];
 
@@ -46,8 +47,12 @@ in {
   networking.networkmanager.enable = true;
 
   networking.interfaces = {
-    wlp15s0 = { wakeOnLan.enable = true; };
-    enp14s0 = { wakeOnLan.enable = true; };
+    wlp15s0 = {
+      wakeOnLan.enable = true;
+    };
+    enp14s0 = {
+      wakeOnLan.enable = true;
+    };
   };
 
   # Set your time zone.
@@ -117,12 +122,15 @@ in {
   users.users.molly = {
     isNormalUser = true;
     description = "Szymon Kaszuba-Galka";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
-    packages = with pkgs;
-      [
-        kdePackages.kate
-        #  thunderbird
-      ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "docker"
+    ];
+    packages = with pkgs; [
+      kdePackages.kate
+      #  thunderbird
+    ];
   };
 
   # Enable Docker
@@ -144,13 +152,19 @@ in {
       syntaxHighlighting.enable = true;
       ohMyZsh = {
         enable = true;
-        plugins = [ "git" "history" ];
+        plugins = [
+          "git"
+          "history"
+        ];
         theme = "robbyrussell";
       };
     };
     nix-ld = {
       enable = true;
-      libraries = with pkgs; [ glibc libcxx ];
+      libraries = with pkgs; [
+        glibc
+        libcxx
+      ];
     };
   };
 
@@ -194,7 +208,7 @@ in {
     openrgb-with-all-plugins
     prisma-engines
     openssl
-    nixfmt-classic
+    nixfmt-rfc-style
     direnv
     # bluetooth
     bluez
@@ -205,6 +219,7 @@ in {
     go
     python3
     obsidian
+    dbeaver-bin
     # media
     google-chrome
     spotify
@@ -214,13 +229,13 @@ in {
   ];
 
   # Add Prisma environment variables
-  environment.sessionVariables = {
-    PRISMA_QUERY_ENGINE_LIBRARY =
-      "${pkgs.prisma-engines}/lib/libquery_engine.node";
-    PRISMA_SCHEMA_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/schema-engine";
-    PRISMA_INTROSPECTION_ENGINE_BINARY =
-      "${pkgs.prisma-engines}/bin/introspection-engine";
-    PRISMA_FMT_BINARY = "${pkgs.prisma-engines}/bin/prisma-fmt";
+  environment.sessionVariables = with pkgs; {
+    PRISMA_FMT_BINARY = "${prisma-engines}/bin/prisma-fmt";
+    PRISMA_QUERY_ENGINE_BINARY = "${prisma-engines}/bin/query-engine";
+    PRISMA_QUERY_ENGINE_LIBRARY = "${prisma-engines}/lib/libquery_engine.node";
+    PRISMA_SCHEMA_ENGINE_BINARY = "${prisma-engines}/bin/schema-engine";
+    PRISMA_MIGRATION_ENGINE_BINARY = "${prisma-engines}/bin/schema-engine";
+    PRISMA_INTROSPECTION_ENGINE_BINARY = "${prisma-engines}/bin/introspection-engine";
   };
 
   # Some programs need SUID wrappers, can be configured further or are

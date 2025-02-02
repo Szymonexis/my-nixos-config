@@ -186,6 +186,24 @@ in
       nvidiaSettings = true;
       open = true;
     };
+    # enable nvidia-container-toolkit for docker
+    nvidia-container-toolkit.enable = true;
+  };
+
+  # enalbe ollama for offline ai models
+  services = {
+    ollama = {
+      enable = true;
+      acceleration = "cuda";
+      port = 11434;
+      loadModels = [
+        "deepseek-r1:14b"
+      ];
+    };
+    nextjs-ollama-llm-ui = {
+      port = 11433;
+      enable = true;
+    };
   };
 
   # Allow unfree packages

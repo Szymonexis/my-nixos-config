@@ -82,7 +82,10 @@ in
   services.desktopManager.plasma6.enable = true;
 
   # Enable openrgb
-  services.hardware.openrgb.enable = true;
+  services.hardware.openrgb = {
+    enable = true;
+    package = pkgs.openrgb-with-all-plugins;
+  };
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -226,9 +229,13 @@ in
     openrgb-with-all-plugins
     prisma-engines
     openssl
+    zlib
     nixfmt-rfc-style
     direnv
     kalker
+    solaar # Logitech Unifying Receiver
+    duf # better df
+    bat # better cat
     # bluetooth
     bluez
     bluez-tools
@@ -245,11 +252,15 @@ in
     discord-ptb
     slack
     xournalpp
+    vlc
+    ntfs3g # installs ntfs-3g package for mounting NTFS partitions
+    zip
+    unzip
   ];
 
   # Add Prisma environment variables
   environment.sessionVariables = with pkgs; {
-    PRISMA_FMT_BINARY = "${prisma-engines}/bin/prisma-fmt";
+    PRISMA_FORMAT_BINARY = "${prisma-engines}/bin/prisma-fmt";
     PRISMA_QUERY_ENGINE_BINARY = "${prisma-engines}/bin/query-engine";
     PRISMA_QUERY_ENGINE_LIBRARY = "${prisma-engines}/lib/libquery_engine.node";
     PRISMA_SCHEMA_ENGINE_BINARY = "${prisma-engines}/bin/schema-engine";
@@ -281,6 +292,5 @@ in
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "24.11"; # Did you read the comment?
-
+  system.stateVersion = "24.11";
 }

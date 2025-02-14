@@ -246,6 +246,7 @@ in
     python3
     obsidian
     dbeaver-bin
+    texliveTeTeX
     # media
     google-chrome
     spotify
@@ -256,6 +257,7 @@ in
     ntfs3g # installs ntfs-3g package for mounting NTFS partitions
     zip
     unzip
+    qbittorrent
   ];
 
   # Add Prisma environment variables
@@ -266,6 +268,13 @@ in
     PRISMA_SCHEMA_ENGINE_BINARY = "${prisma-engines}/bin/schema-engine";
     PRISMA_INTROSPECTION_ENGINE_BINARY = "${prisma-engines}/bin/introspection-engine";
   };
+
+  # Enable flakes - experimental feature (for many years now...)
+
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

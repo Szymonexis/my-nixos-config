@@ -147,7 +147,11 @@ in
   users.defaultUserShell = pkgs.zsh;
 
   programs = {
-    steam.enable = true;
+    steam = {
+      enable = true;
+      remotePlay.openFirewall = true;
+      dedicatedServer.openFirewall = true;
+    };
     firefox.enable = true;
     zsh = {
       enable = true;

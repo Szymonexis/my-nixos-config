@@ -262,6 +262,9 @@ in
     zip
     unzip
     qbittorrent
+    # gaming
+    goverlay
+    mangohud
   ];
 
   # Add Prisma environment variables

@@ -4,28 +4,6 @@
 
 { config, pkgs, ... }:
 
-let
-  stripe-cli = pkgs.stdenv.mkDerivation rec {
-    pname = "stripe-cli";
-    version = "1.23.9";
-    src = pkgs.fetchurl {
-      url = "https://github.com/stripe/stripe-cli/releases/download/v1.23.9/stripe_1.23.9_linux_x86_64.tar.gz";
-      sha256 = "1rvvvfam1a781vy3wgqrrf83i8jvw4xwia3415ly2xgybzdppkzn";
-    };
-
-    # Force creation of a directory structure
-    unpackPhase = ''
-      mkdir stripe-cli
-      tar xzf $src -C stripe-cli
-      cd stripe-cli
-    '';
-
-    # The tarball contains a single binary named 'stripe'
-    installPhase = ''
-      install -Dm755 stripe $out/bin/stripe
-    '';
-  };
-in
 {
   imports = [
     # Include the results of the hardware scan.
@@ -240,6 +218,10 @@ in
     solaar # Logitech Unifying Receiver
     duf # better df
     bat # better cat
+    kdePackages.filelight # disk usage analyzer GUI
+    util-linux
+    exfatprogs
+    gparted
     # bluetooth
     bluez
     bluez-tools
@@ -247,10 +229,17 @@ in
     vscode
     nodejs_22
     go
-    python3
+    (python312.withPackages (
+      ps: with ps; [
+        pillow
+        numpy
+        pandas
+        matplotlib
+      ]
+    ))
     obsidian
     dbeaver-bin
-    texliveTeTeX
+    insomnia
     # media
     google-chrome
     spotify
@@ -262,6 +251,9 @@ in
     zip
     unzip
     qbittorrent
+    megasync
+    ffmpeg_6-full
+    texlive.combined.scheme-full
     # gaming
     goverlay
     mangohud

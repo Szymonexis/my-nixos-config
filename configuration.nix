@@ -222,6 +222,7 @@
     util-linux
     exfatprogs
     gparted
+    inkscape-with-extensions
     # bluetooth
     bluez
     bluez-tools

@@ -226,10 +226,11 @@
     # bluetooth
     bluez
     bluez-tools
-    # programming
-    vscode
+    # programming languages
     nodejs_22
     go
+    dotnet-sdk
+    dotnet-runtime
     (python312.withPackages (
       ps: with ps; [
         pillow
@@ -238,6 +239,8 @@
         matplotlib
       ]
     ))
+    # programming tools
+    vscode
     obsidian
     dbeaver-bin
     insomnia

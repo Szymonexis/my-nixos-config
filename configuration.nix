@@ -25,9 +25,6 @@
   networking.networkmanager.enable = true;
 
   networking.interfaces = {
-    wlp15s0 = {
-      wakeOnLan.enable = true;
-    };
     enp14s0 = {
       wakeOnLan.enable = true;
     };
@@ -53,7 +50,10 @@
 
   # Enable the X11 windowing system.
   # You can disable this if you're only using the Wayland session.
-  services.xserver.enable = true;
+  services.xserver = {
+    enable = true;
+    videoDrivers = [ "nvidia" ];
+  };
 
   # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
@@ -99,6 +99,19 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
+  # Enable XRDP
+  services.xrdp = {
+    package = pkgs.xrdp;
+    enable = true;
+    port = 3389;
+    defaultWindowManager = "startplasma-x11";
+    openFirewall = true;
+    audio = {
+      enable = true;
+      package = pkgs.pulseaudio-module-xrdp;
+    };
+  };
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.molly = {
     isNormalUser = true;
@@ -107,6 +120,8 @@
       "networkmanager"
       "wheel"
       "docker"
+      "video"
+      "tty"
     ];
     packages = with pkgs; [
       kdePackages.kate
@@ -114,9 +129,19 @@
     ];
   };
 
+  # Enable VirtualBox
+  virtualisation.virtualbox.host = {
+    enable = true;
+    enableKvm = true;
+    enableExtensionPack = true;
+    addNetworkInterface = false;
+  };
+
   # Enable Docker
-  virtualisation.docker.enable = true;
-  virtualisation.docker.enableOnBoot = true;
+  virtualisation.docker = {
+    enable = true;
+    enableOnBoot = true;
+  };
 
   # Enable Bluetooth
   hardware.bluetooth.enable = true;
@@ -152,9 +177,6 @@
       ];
     };
   };
-
-  # ensure xorg uses the nvidia driver
-  services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware = {
     graphics.enable = true;
@@ -219,6 +241,7 @@
     duf # better df
     bat # better cat
     kdePackages.filelight # disk usage analyzer GUI
+    ethtool
     util-linux
     exfatprogs
     gparted

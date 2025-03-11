@@ -267,6 +267,7 @@
     obsidian
     dbeaver-bin
     insomnia
+    jetbrains.rider
     # media
     google-chrome
     spotify

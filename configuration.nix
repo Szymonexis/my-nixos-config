@@ -14,6 +14,18 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # Mount drives
+  fileSystems."/mnt/windows" = {
+    device = "/dev/nvme1n1p1";
+    fsType = "ntfs-3g";
+    options = [
+      "uid=1000"
+      "gid=100"
+      "umask=000"
+      "rw"
+    ];
+  };
+
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -220,6 +232,8 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     # various utils
+    ripgrep
+    libgccjit
     wget
     pciutils
     zsh
@@ -254,14 +268,7 @@
     go
     dotnet-sdk
     dotnet-runtime
-    (python312.withPackages (
-      ps: with ps; [
-        pillow
-        numpy
-        pandas
-        matplotlib
-      ]
-    ))
+    python312
     # programming tools
     vscode
     obsidian

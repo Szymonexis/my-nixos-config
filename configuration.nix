@@ -69,7 +69,10 @@
 
   # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
+  services.desktopManager.plasma6 = {
+    enable = true;
+    enableQt5Integration = false;
+  };
 
   # Enable openrgb
   services.hardware.openrgb = {
@@ -217,6 +220,7 @@
       port = 11434;
       loadModels = [
         "deepseek-r1:14b"
+        "gemma3:12b"
       ];
     };
     nextjs-ollama-llm-ui = {
@@ -273,8 +277,8 @@
     vscode
     obsidian
     dbeaver-bin
-    insomnia
     jetbrains.rider
+    postman
     # media
     google-chrome
     spotify
@@ -289,9 +293,6 @@
     megasync
     ffmpeg_6-full
     texlive.combined.scheme-full
-    # gaming
-    goverlay
-    mangohud
   ];
 
   # Add Prisma environment variables

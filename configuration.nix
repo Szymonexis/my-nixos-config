@@ -264,6 +264,7 @@
     exfatprogs
     gparted
     inkscape-with-extensions
+    postgresql_17_jit
     # bluetooth
     bluez
     bluez-tools

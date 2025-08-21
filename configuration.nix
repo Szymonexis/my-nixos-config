@@ -265,6 +265,7 @@
     gparted
     inkscape-with-extensions
     postgresql_17_jit
+    lsof
     # bluetooth
     bluez
     bluez-tools

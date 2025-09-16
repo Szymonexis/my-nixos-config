@@ -11,8 +11,15 @@
   ];
 
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader = {
+    systemd-boot = {
+      enable = true;
+      configurationLimit = 5;
+    };
+    efi = {
+      canTouchEfiVariables = true;
+    };
+  };
 
   # Mount drives
   fileSystems."/mnt/windows" = {
@@ -23,6 +30,10 @@
       "gid=100"
       "umask=000"
       "rw"
+      "nofail" # don't block boot if it fails
+      "x-systemd.device-timeout=10s" # wait up to 10s for device
+      "x-systemd.mount-timeout=30s" # wait up to 30s for mount
+      "x-systemd.automount" # mount on first access (lazy mount)
     ];
   };
 
@@ -71,7 +82,6 @@
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6 = {
     enable = true;
-    enableQt5Integration = false;
   };
 
   # Enable openrgb
@@ -130,7 +140,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.molly = {
     isNormalUser = true;
-    description = "Szymon Kaszuba-Galka";
+    description = "Szymon Kaszuba-Gałka";
     extraGroups = [
       "networkmanager"
       "wheel"
@@ -210,23 +220,6 @@
     };
     # enable nvidia-container-toolkit for docker
     nvidia-container-toolkit.enable = true;
-  };
-
-  # enalbe ollama for offline ai models
-  services = {
-    ollama = {
-      enable = true;
-      acceleration = "cuda";
-      port = 11434;
-      loadModels = [
-        "deepseek-r1:14b"
-        "gemma3:12b"
-      ];
-    };
-    nextjs-ollama-llm-ui = {
-      port = 11433;
-      enable = true;
-    };
   };
 
   # Allow unfree packages

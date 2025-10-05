@@ -216,7 +216,7 @@
 
       # enable nvidia settings gui
       nvidiaSettings = true;
-      open = true;
+      open = false;
     };
     # enable nvidia-container-toolkit for docker
     nvidia-container-toolkit.enable = true;
@@ -229,8 +229,10 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     # various utils
+    pandoc
     ripgrep
-    libgccjit
+    gcc
+    binutils
     wget
     pciutils
     zsh
@@ -251,7 +253,7 @@
     solaar # Logitech Unifying Receiver
     duf # better df
     bat # better cat
-    kdePackages.filelight # disk usage analyzer GUI
+    baobab
     ethtool
     util-linux
     exfatprogs

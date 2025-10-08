@@ -79,9 +79,9 @@
   };
 
   # Enable the KDE Plasma Desktop Environment.
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6 = {
-    enable = true;
+  services.displayManager = {
+    sddm.enable = true;
+    plasma6.enable = true;
   };
 
   # Enable openrgb
@@ -210,13 +210,13 @@
       modesetting.enable = true;
 
       # use stable nvidia driver package
-      package = config.boot.kernelPackages.nvidiaPackages.stable;
+      package = config.boot.kernelPackages.nvidiaPackages.production;
       powerManagement.enable = false;
       powerManagement.finegrained = false;
 
       # enable nvidia settings gui
       nvidiaSettings = true;
-      open = false;
+      open = true;
     };
     # enable nvidia-container-toolkit for docker
     nvidia-container-toolkit.enable = true;
